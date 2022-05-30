@@ -34,6 +34,7 @@
         "drupal/migrate_plus": "^5.1",
         "drupal/migrate_source_csv": "^3.4",
         "drupal/migrate_tools": "^5.0",
+        "drupal/og": "^1.0@alpha",
         "drupal/paragraphs": "^1.12",
         "drupal/pathauto": "^1.8",
         "drupal/pluggable_entity_view_builder": "^1.1",

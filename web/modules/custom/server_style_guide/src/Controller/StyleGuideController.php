@@ -181,6 +181,7 @@ class StyleGuideController extends ControllerBase {
       '#initials' => 'BM',
       '#url' => '#',
     ];
+
     $build[] = $this->wrapElementWideContainer($element, 'User Image - No Photo');
 
     $element = [
@@ -188,6 +189,34 @@ class StyleGuideController extends ControllerBase {
       '#title' => 'The source has extend, but not everyone fears it',
     ];
     $build[] = $this->wrapElementWideContainer($element, 'Page Title');
+    // New Person.
+    $server_theme_single_person_image = [
+      '#theme' => 'server_theme_single_person_image',
+      '#image' => $this->getPlaceholderPersonImage(256, 256),
+      '#image_alt' => 'Bill Murray',
+      '#url' => '#',
+      '#name' => 'Jane Cooper',
+      '#designation' => 'Paradigam Representative',
+      '#role' => 'Admin',
+      '#email' => 'Email',
+      '#phone' => 'Call',
+    ];
+    $build[] = $this->wrapElementWideContainer($server_theme_single_person_image, 'Person card');
+    // 10 Person Grid
+    $element = [
+      '#theme' => 'server_theme_multi_person_image',
+      '#image' => $this->getPlaceholderPersonImage(256, 256),
+      '#image_alt' => 'Bill Murray',
+      '#url' => '#',
+      '#name' => 'Jane Cooper',
+      '#designation' => 'Paradigam Representative',
+      '#role' => 'Admin',
+      '#email' => 'Email',
+      '#phone' => 'Call',
+      '#rows' => 2,
+      '#columns' => 5,
+    ];
+    $build[] = $this->wrapElementWideContainer($element, '10 Person cards');
 
     return $build;
   }
