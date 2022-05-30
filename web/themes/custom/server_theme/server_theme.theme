@@ -2,6 +2,15 @@
 
 /**
  * @file
+ * Functions to support theming.
+ */
+use Drupal\user\Entity\User;
+use Drupal\og\Og;
+use Drupal\Core\Url;
+use Drupal\Core\Link;
+
+/**
+ * @file
  * Theme custom logic.
  */
 
@@ -101,6 +110,34 @@ function server_theme_theme() {
     ],
   ];
 
+  $info['server_theme_single_person_image'] = [
+    'variables' => [
+      'image' => NULL,
+      'image_alt' => NULL,
+      'initials' => NULL,
+      'name' => NULL,
+      'designation' => NULL,
+      'email' => NULL,
+      'phone' => NULL,
+      'role' => NULL,
+    ],
+  ];
+
+  $info['server_theme_multi_person_image'] = [
+    'variables' => [
+      'image' => NULL,
+      'image_alt' => NULL,
+      'initials' => NULL,
+      'name' => NULL,
+      'designation' => NULL,
+      'email' => NULL,
+      'phone' => NULL,
+      'role' => NULL,
+      'rows' => NULL,
+      'columns' => NULL,
+    ],
+  ];
+
   $info['server_theme_footer'] = [
     'variables' => [],
   ];
@@ -148,4 +185,47 @@ function server_theme_preprocess_page_title(array &$variables) {
  */
 function server_theme_theme_suggestions_page_title_alter(array &$suggestions, array $variables) {
   $suggestions[] = 'server_theme_page_title';
+}
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function server_theme_preprocess_node(array &$variables) {
+  $route_match = \Drupal::routeMatch();
+  if ($route_match->getRouteName() == 'entity.node.canonical') {
+    $node = $variables['node'];
+    if ($node->get('type')->getString() == "group_blog") {
+      $node = $route_match->getParameter('node');
+      $user = User::load(\Drupal::currentUser()->id());
+      if (!(Og::isMember($node, $user))) {
+        $url = Url::fromRoute('og.subscribe', [
+          'entity_type_id' => 'node',
+          'group' => $node->id(),
+        ]);
+        $grp_info = $node->getTitle();
+        $username = $user->get('name')->value;
+        $subscribe_link = Link::fromTextAndUrl(t('click here'), $url)->toString();
+        $variables['content']['og_group'][0] = [
+          '#type' => 'html_tag',
+          '#tag' => 'div',
+          '#value' => t('Hi @username, @subscribe_link if you would like to subsribe to this group called @group_name',
+              [
+                '@username' => $username,
+                '@subscribe_link' => $subscribe_link,
+                '@group_name' => $grp_info,
+              ]
+          ),
+        ];
+        $variables['user_info'] = $username;
+        $variables['og_subscription_url'] = $url;
+        $variables['og_subscription_group_info'] = $grp_info;
+      }
+      else {
+        $variables['user_info'] = "";
+        $variables['og_subscription_url'] = "";
+        $variables['og_subscription_group_info'] = "";
+      }
+      $variables['#cache']['max-age'] = 0;
+    }
+  }
 }

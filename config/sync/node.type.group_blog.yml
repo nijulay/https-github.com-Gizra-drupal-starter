@@ -1,0 +1,18 @@
+uuid: 4799ed7a-fd8a-4fc9-9b13-4e99a6b51ca7
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: 'Group blog'
+type: group_blog
+description: ''
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true
